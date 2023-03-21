@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 
 const Sample: NextPage = () => {
   return (
-    <div className='grid min-h-screen gap-10 px-20 py-20 bg-slate-400'>
+    <div className='min-h-screen px-20 py-20 grid gap-10 bg-slate-400'>
       <div className='p-6 bg-white shadow-xl rounded-3xl'>
         <span className='text-2xl font-semibold'>Select Item</span>
         {/* <div className='flex justify-between my-2'>
@@ -73,7 +73,7 @@ const Sample: NextPage = () => {
           <span>⬅️</span>
           <div className='space-x-3'>
             <span>⭐️ 4.9</span>
-            <span className='p-2 rounded-md shadow-xl'>💖</span>
+            <span className='p-2 shadow-xl rounded-md'>💖</span>
           </div>
         </div>
         <div className='mb-5 bg-zinc-400 h-72' />
@@ -84,15 +84,15 @@ const Sample: NextPage = () => {
             <div className='space-x-2'>
               <button
                 title='button'
-                className='w-5 h-5 transition bg-yellow-500 rounded-full focus:ring-2 ring-offset-2 ring-yellow-300'
+                className='w-5 h-5 bg-yellow-500 rounded-full transition focus:ring-2 ring-offset-2 ring-yellow-300'
               ></button>
               <button
                 title='button'
-                className='w-5 h-5 transition bg-gray-600 rounded-full focus:ring-2 ring-offset-2 ring-black-300'
+                className='w-5 h-5 bg-gray-600 rounded-full transition focus:ring-2 ring-offset-2 ring-black-300'
               ></button>
               <button
                 title='button'
-                className='w-5 h-5 transition bg-red-500 rounded-full focus:ring-2 ring-offset-2 ring-red-300'
+                className='w-5 h-5 bg-red-500 rounded-full transition focus:ring-2 ring-offset-2 ring-red-300'
               ></button>
             </div>
             <div className='flex items-center space-x-5'>
