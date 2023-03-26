@@ -147,7 +147,7 @@ const Sample: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className='w-3/4 p-3 mx-auto mt-5 mt-6 text-center text-white bg-white shadow-lg rounded-xl hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:text-red-500'>
+        <div className='w-3/4 p-3 mx-auto mt-6 text-center text-white bg-white shadow-lg rounded-xl hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:text-red-500'>
           <div className='flex items-center justify-between m-1 ml-1 text-gray-900'>
             <div className='flex items-center justify-center'>
               <div className='flex items-center justify-center mx-auto my-auto mt-5 border rounded-3xl w-14 h-14'>
@@ -165,7 +165,7 @@ const Sample: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className='w-3/4 p-3 mx-auto mt-5 mt-6 text-center text-white bg-white shadow-lg rounded-xl hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:text-red-500'>
+        <div className='w-3/4 p-3 mx-auto mt-6 text-center text-white bg-white shadow-lg rounded-xl hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:text-red-500'>
           <div className='flex items-center justify-between m-1 ml-1 text-gray-900'>
             <div className='flex items-center justify-center'>
               <div className='flex items-center justify-center mx-auto my-auto mt-5 border rounded-3xl w-14 h-14'>
