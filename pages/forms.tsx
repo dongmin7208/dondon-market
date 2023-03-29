@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Forms() {
+  const { register, handleSubmit } = useForm();
+  const onValid = () => {
+    console.log("im valid bby");
+  };
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,29 +40,23 @@ export default function Forms() {
     }
   };
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onValid)}>
       <input
-        value={username}
-        onChange={onUsernameChange}
+        {...register("username", {
+          required: true,
+        })}
         type='text'
         placeholder='Username'
-        required
-        minLength={5}
       />
       <input
-        value={email}
-        onChange={onEmailChange}
+        {...register("email", { required: true })}
         type='email'
         placeholder='Email'
-        required
       />
-      {emailError}
       <input
-        value={password}
-        onChange={onPasswordChange}
+        {...register("password", { required: true })}
         type='password'
         placeholder='Password'
-        required
       />
       <input type='submit' value='Create Account' />
     </form>
