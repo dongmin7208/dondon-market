@@ -1,17 +1,48 @@
-import type { NextPage } from 'next';
+import type { NextPage } from "next";
+import Button from "@components/button";
+import Layout from "@components/layout";
+import TextArea from "@components/textarea";
+import { useForm } from "react-hook-form";
+import useMutation from "@libs/client/useMutation";
+import { useEffect } from "react";
+import { Post } from "@prisma/client";
+import { useRouter } from "next/router";
+import useCoords from "@libs/client/useCoords";
+
+interface WriteForm {
+  question: string;
+}
+
+interface WriteResponse {
+  ok: boolean;
+  post: Post;
+}
 
 const Write: NextPage = () => {
+  const { latitude, longitude } = useCoords();
+  const router = useRouter();
+  const { register, handleSubmit } = useForm<WriteForm>();
+  const [post, { loading, data }] = useMutation<WriteResponse>("/api/posts");
+  const onValid = (data: WriteForm) => {
+    if (loading) return;
+    post({ ...data, latitude, longitude });
+  };
+  useEffect(() => {
+    if (data && data.ok) {
+      router.push(`/community/${data.post.id}`);
+    }
+  }, [data, router]);
   return (
-    <form className='px-4 py-10'>
-      <textarea
-        className='w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 '
-        rows={4}
-        placeholder='Ask a question!'
-      />
-      <button className='w-full px-4 py-2 mt-2 text-sm font-medium text-white bg-orange-500 border border-transparent rounded-md shadow-sm hover:bg-orange-600 focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none '>
-        Submit
-      </button>
-    </form>
+    <Layout canGoBack title="Write Post">
+      <form onSubmit={handleSubmit(onValid)} className="p-4 space-y-4">
+        <TextArea
+          register={register("question", { required: true, minLength: 5 })}
+          required
+          placeholder="Ask a question!"
+        />
+        <Button text={loading ? "Loading..." : "Submit"} />
+      </form>
+    </Layout>
   );
 };
 

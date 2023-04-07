@@ -1,63 +1,93 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
-// import styles from '@/styles/Home.module.css';
+import type { NextPage } from "next";
+import FloatingButton from "@components/floating-button";
+import Item from "@components/item";
+import Layout from "@components/layout";
+import useUser from "@libs/client/useUser";
+import Head from "next/head";
+import useSWR, { SWRConfig } from "swr";
+import { Product } from "@prisma/client";
+import client from "@libs/server/client";
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function Home() {
-  return (
-    <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-      <Head>
-        <title>Next.js + Tailwind CSS</title>
-        <link rel='icon' href='/favicon.ico' />
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link
-          rel='preconnect'
-          href='https://fonts.gstatic.com'
-          crossOrigin=''
-        />
-        <link
-          href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
-          rel='stylesheet'
-        />
-      </Head>
-
-      <h1 className='text-6xl font-bold'>
-        Welcome to{' '}
-        <a className='text-blue-600' href='https://nextjs.org'>
-          Next.js!
-        </a>
-      </h1>
-
-      <p className='mt-3 text-2xl'>
-        Get started by editing{' '}
-        <code className='p-3 font-mono text-lg bg-gray-100 rounded-md'>
-          pages/index.js
-        </code>
-      </p>
-
-      <div className='flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full'>
-        <a
-          href='https://nextjs.org/docs'
-          className='p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600'
-        >
-          <h3 className='text-2xl font-bold'>Documentation &rarr;</h3>
-          <p className='mt-4 text-xl'>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href='https://nextjs.org/learn'
-          className='p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600'
-        >
-          <h3 className='text-2xl font-bold'>Learn &rarr;</h3>
-          <p className='mt-4 text-xl'>
-            Learn about Next.js in an interactive course with quizzes!
-          </p>
-        </a>
-      </div>
-    </div>
-  );
+export interface ProductWithCount extends Product {
+  _count: {
+    favs: number;
+  };
 }
+
+interface ProductsResponse {
+  ok: boolean;
+  products: ProductWithCount[];
+}
+
+const Home: NextPage = () => {
+  const { user, isLoading } = useUser();
+  const { data } = useSWR<ProductsResponse>("/api/products");
+  return (
+    <Layout title="홈" hasTabBar>
+      <Head>
+        <title>Home</title>
+      </Head>
+      <div className="flex flex-col space-y-5 divide-y">
+        {data
+          ? data?.products?.map((product) => (
+              <Item
+                id={product.id}
+                key={product.id}
+                title={product.name}
+                price={product.price}
+                hearts={product._count?.favs || 0}
+                image={product.image}
+              />
+            ))
+          : "Loading..."}
+        <FloatingButton href="/products/upload">
+          <svg
+            className="h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+        </FloatingButton>
+      </div>
+    </Layout>
+  );
+};
+
+const Page: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/products": {
+            ok: true,
+            products,
+          },
+        },
+      }}
+    >
+      <Home />
+    </SWRConfig>
+  );
+};
+
+export async function getServerSideProps() {
+  console.log("SSR");
+  const products = await client.product.findMany({});
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
+}
+
+export default Page;
